@@ -12,7 +12,7 @@ Desde carpeta del repo
 
 ```bash
 # Seteo de variables
-export REPO_FOLDER=${PWD}
+export REPO_FOLDER=$(pwd)
 set -o allexport && source .env && set +o allexport
 
 # Verificarlo
@@ -56,13 +56,17 @@ Si tiene instalado psql:
 ```bash
 export PGPASSWORD=$POSTGRES_PASSWORD 
 psql -U postgres -h localhost -p 5432
+
+# Yo debo hacer:
+docker exec -it mlops-postgres psql -U postgres -d nombre_base_de_datos -h localhost
+
 ```
 
 ### Create MLFLOW DB
 
 ```sql
 CREATE DATABASE mlflow_db;
-CREATE USER mlflow_user WITH ENCRYPTED PASSWORD 'mlflow';
+CREATE USER mlflow_user WITH ENCRYPTED PASSWORD 'mlflow_psw';
 GRANT ALL PRIVILEGES ON DATABASE mlflow_db TO mlflow_user;
 ```
 
@@ -73,7 +77,7 @@ GRANT ALL PRIVILEGES ON DATABASE mlflow_db TO mlflow_user;
 ```bash
 # desde la carpeta del proyecto
 
-mlflow server --backend-store-uri postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST/$MLFLOW_POSTGRES_DB --default-artifact-root $MLFLOW_ARTIFACTS_PATH -h 0.0.0.0 -p 8002
+mlflow server --backend-store-uri postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST/$MLFLOW_POSTGRES_DB --default-artifact-root $MLFLOW_ARTIFACTS_PATH --host 0.0.0.0 --port 8002
 ```
 Abrir browser en http://localhost:8002/
 
@@ -123,12 +127,12 @@ ALTER DATABASE mlops OWNER TO airbyte;
 ```
 
 ```sql
-CREATE DATABASE mlops;
-CREATE USER "jganzaba@itba.edu.ar" WITH ENCRYPTED PASSWORD 'airbyte';
-GRANT ALL PRIVILEGES ON DATABASE mlops TO "jganzaba@itba.edu.ar";
-GRANT ALL ON SCHEMA public TO "jganzaba@itba.edu.ar";
-GRANT USAGE ON SCHEMA public TO "jganzaba@itba.edu.ar";
-ALTER DATABASE mlops OWNER TO "jganzaba@itba.edu.ar";
+# CREATE DATABASE mlops;
+CREATE USER "jorge.aguirre@gmx.com" WITH ENCRYPTED PASSWORD 'airbyte';
+GRANT ALL PRIVILEGES ON DATABASE mlops TO "jorge.aguirre@gmx.com";
+GRANT ALL ON SCHEMA public TO "jorge.aguirre@gmx.com";
+GRANT USAGE ON SCHEMA public TO "jorge.aguirre@gmx.com";
+ALTER DATABASE mlops OWNER TO "jorge.aguirre@gmx.com";
 
 \du 
 ```
@@ -137,7 +141,7 @@ ALTER DATABASE mlops OWNER TO "jganzaba@itba.edu.ar";
 ### Crear entorno
 
 ```bash
-conda create -n mlops-dbt python=3.9
+conda create -n mlops-dbt python=3.12
 conda activate mlops-dbt
 pip install dbt-postgres
 
