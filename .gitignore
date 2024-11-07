@@ -1,3 +1,6 @@
 mlflow_data/1
 dbs/data
 datasets
+db_postgres/
+logs/
+target/
