@@ -5,7 +5,7 @@ conda activate mlops-env
 pip install mlflow
 conda install -c conda-forge psycopg2
 ```
-
+### *yo trato de utilizar entorno mlops-ecosystem que contiene todo*
 
 # Definición de variables de entorno
 Desde carpeta del repo
@@ -115,6 +115,9 @@ IP localhost no funciona, usar ip local (192.x.x.x)
 
 ```bash
 psql -U postgres -h localhost -p 5432
+
+# Hice:
+docker exec -it mlops-postgres psql -U postgres -h localhost
 ```
 
 ```sql
@@ -130,8 +133,8 @@ ALTER DATABASE mlops OWNER TO airbyte;
 # CREATE DATABASE mlops;
 CREATE USER "jorge.aguirre@gmx.com" WITH ENCRYPTED PASSWORD 'airbyte';
 GRANT ALL PRIVILEGES ON DATABASE mlops TO "jorge.aguirre@gmx.com";
-GRANT ALL ON SCHEMA public TO "jorge.aguirre@gmx.com";
-GRANT USAGE ON SCHEMA public TO "jorge.aguirre@gmx.com";
+GRANT ALL ON SCHEMA target TO "jorge.aguirre@gmx.com";
+GRANT USAGE ON SCHEMA target TO "jorge.aguirre@gmx.com";
 ALTER DATABASE mlops OWNER TO "jorge.aguirre@gmx.com";
 
 \du 
@@ -189,12 +192,14 @@ https://cloud.mongodb.com/v2/653ac4dcf923b06a3d61bfcc#/overview
 ```bash
 
 docker pull mongo
+# En vez de lo anterior instalé mi propia imagen usando Dockerfile
 
 docker run \
     --name mlops-mongo \
     -v $mongo_data_folder:/data/db \
     -p 27017:27017 \
     mongo
+   # mlops-mongo-python y no necesito las 2 lineas siguientes
 
 docker exec -it mlops-mongo /bin/bash
 
